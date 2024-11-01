@@ -1,77 +1,87 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
-
-int front = -1, rear = -1, size;
-int* arr;
-
-bool isFull() {
-    return (rear + 1) % size == front;
+const int QUEUE_CAPACITY = 4;
+class Queue
+{
+    private:
+		int myArray[QUEUE_CAPACITY];
+		int front, rear, count;
+    public:
+		Queue();
+		bool isEmpty();
+		bool isFull();
+		void enqueue(int value);
+		int getFront(); 
+		int dequeue();
+		void display();  
+}; 
+Queue::Queue()
+{
+	front = rear = count =0;
 }
-
-bool isEmpty() {
-    return front == -1;
+bool Queue::isEmpty()
+{
+	return (count==0);
 }
-
-void enqueue(int value) {
-    if (isFull()) {
-        cout << "Queue is full. " << value << " cannot be enqueued." << endl;
+bool Queue::isFull()
+{
+	return(count==QUEUE_CAPACITY);
+}
+void Queue::enqueue(int value)
+{
+	if (! isFull()){
+		myArray[rear] = value;
+		rear = (rear + 1) % QUEUE_CAPACITY;
+		count++;
+	}
+}
+int Queue::dequeue()
+{
+	if (! isEmpty())	{
+	    int val= myArray[front] ;
+	    front = (front + 1) % QUEUE_CAPACITY;
+	    cout<<val<<" Dequeued"<<endl;
+         count--;
+         return val;}
+	else
+           return -1;
+}
+void Queue::display(){
+    if (front == -1 ) {
+        cout << "Queue is Empty" << endl;
         return;
     }
-    if (isEmpty()) {
-        front = rear = 0;
-    } else {
-        rear = (rear + 1) % size;
-    }
-    arr[rear] = value;
-    cout << "Enqueued: " << value << endl;
-}
-
-void dequeue() {
-    if (isEmpty()) {
-        cout << "Queue is empty." << endl;
-        return;
-    }
-    cout << "Dequeued: " << arr[front] << endl;
-    if (front == rear) {
-        front = rear = -1;
-    } else {
-        front = (front + 1) % size;
-    }
-}
-
-void display() {
-    if (isEmpty()) {
-        cout << "Queue is empty." << endl;
-        return;
-    }
-    cout << "Queue elements: ";
-    int i = front;
-    while (true) {
-        cout << arr[i] << " ";
-        if (i == rear) break;
-        i = (i + 1) % size;
+    int index=front;
+    for (int i = 0; i < count; i++) {
+        cout << myArray[i] << "  ";
+        index=(index+1)%QUEUE_CAPACITY;
     }
     cout << endl;
 }
-
 int main() {
-    size = 5;
-    arr = new int[size];  // Dynamically allocate memory for the queue array
-
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    enqueue(40);
-    enqueue(50);
-    enqueue(60);  // This will show that the queue is full
-    display();
-    dequeue();
-    dequeue();
-    display();
-    enqueue(60);
-    display();
-
-    delete[] arr;  
+	Queue q;
+    q.enqueue(10);
+    q.display();
+    
+    q.enqueue(20);
+    q.display();
+    
+    q.enqueue(30);
+    q.display();
+    
+    q.dequeue();
+    q.display();
+    
+    q.enqueue(40);
+    q.display();
+    
+    q.dequeue();
+    q.display();
+    
+    q.enqueue(50);
+    q.display();
+    
+    q.isEmpty();
+    
     return 0;
 }
-
